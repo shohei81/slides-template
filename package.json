@@ -1,0 +1,10 @@
+{
+  "name": "slides-template",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reveal.js presentation template with KaTeX, dark theme, and speaker notes.",
+  "scripts": {
+    "dev": "npx -y serve@14 -l 8000 .",
+    "pdf": "bash scripts/export-pdf.sh"
+  }
+}
