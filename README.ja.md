@@ -129,15 +129,33 @@ bash scripts/export-pdf.sh slides-en.pdf en   # 英語版を出力
 
 ブラウザ側で出したい場合は、URL の末尾に `?print-pdf` を付けてブラウザの印刷ダイアログから "PDF として保存" する手もある (Chrome 推奨)。英語版を出すなら `?lang=en&print-pdf` の組み合わせで。
 
+## デザインテンプレート
+
+`templates/` 配下に差し替え用のデザイン違い (dark / light / academic / minimal) を用意している。気に入ったものを `slides.html` に上書きコピーして使う:
+
+```bash
+cp templates/academic.html slides.html
+```
+
+各テーマのプレビューと説明は [templates/README.md](templates/README.md) を参照。
+
 ## ディレクトリ構成
 
 ```
 slides-template/
 ├── slides.html              # 本体。直接編集する
+├── templates/               # 差し替え用デザイン一式
+│   ├── README.md            # プレビュー + 説明
+│   ├── dark.html
+│   ├── light.html
+│   ├── academic.html
+│   ├── minimal.html
+│   └── screenshots/
 ├── figs/                    # 図を置く
 │   └── sample.svg
 ├── scripts/
-│   └── export-pdf.sh
+│   ├── export-pdf.sh
+│   └── screenshot.sh        # テンプレートのプレビューを再生成
 ├── package.json             # dev / pdf スクリプト
 ├── README.md                # 英語版
 └── README.ja.md             # 日本語版 (このファイル)

@@ -129,17 +129,36 @@ Internally spins up `npx serve` and runs `decktape` against `slides.html?lang=<j
 
 If you prefer the browser route, append `?print-pdf` to the URL and use the browser's "Save as PDF" dialog (Chrome recommended). Combine with `?lang=en&print-pdf` for an English print.
 
+## Design templates
+
+`templates/` holds drop-in design alternatives (dark / light / academic / minimal). Pick one and copy it over `slides.html`:
+
+```bash
+cp templates/academic.html slides.html
+```
+
+See [templates/README.md](templates/README.md) for previews and details on each look.
+
 ## Layout
 
 ```
 slides-template/
 ├── slides.html              # The deck. Edit this directly.
+├── templates/               # Drop-in design alternatives
+│   ├── README.md            # Previews + descriptions
+│   ├── dark.html
+│   ├── light.html
+│   ├── academic.html
+│   ├── minimal.html
+│   └── screenshots/
 ├── figs/                    # Figures
 │   └── sample.svg
 ├── scripts/
-│   └── export-pdf.sh
+│   ├── export-pdf.sh
+│   └── screenshot.sh        # Regenerates template previews
 ├── package.json             # dev / pdf scripts
-└── README.md
+├── README.md
+└── README.ja.md
 ```
 
 ## Dependencies

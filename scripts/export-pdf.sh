@@ -16,9 +16,10 @@ for _ in {1..30}; do
   sleep 0.2
 done
 
+# Drop .html so serve's cleanUrls redirect doesn't strip the query string.
 npx -y decktape@3 reveal \
   --size 1280x960 \
-  "http://localhost:$PORT/slides.html?lang=$LANG_ARG" \
+  "http://localhost:$PORT/slides?lang=$LANG_ARG" \
   "$OUT"
 
 echo "Wrote $OUT"
