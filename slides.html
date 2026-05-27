@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="utf-8">
 <title>Presentation Title — Subtitle</title>
@@ -41,6 +41,11 @@
   .reveal ul li, .reveal ol li { margin: 0.25em 0; }
   .label { display: inline-block; background: var(--accent); color: #0a0a0a; font-size: 0.55em; padding: 0.15em 0.6em; border-radius: 10px; vertical-align: middle; margin-left: 0.4em; letter-spacing: 0.05em; font-weight: 700;}
   .nav-hint { position: fixed; bottom: 8px; right: 12px; font-size: 11px; color: #555; z-index: 100; }
+  .lang-badge { position: fixed; bottom: 8px; left: 12px; font-size: 11px; color: #888; z-index: 100; letter-spacing: 0.1em; font-weight: 700; }
+  .lang-badge::before { content: 'JA'; }
+  body.lang-en .lang-badge::before { content: 'EN'; }
+  body.lang-ja .lang-en { display: none; }
+  body.lang-en .lang-ja { display: none; }
   table.compare { border-collapse: collapse; font-size: 0.82em; margin-top: 0.4em; color: var(--fg);}
   table.compare th, table.compare td { border: 1px solid #333; padding: 7px 14px; text-align: left;}
   table.compare th { background: var(--soft);}
@@ -56,118 +61,228 @@
   .progress-step { color: var(--muted); font-size: 0.6em; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3em;}
 </style>
 </head>
-<body>
+<body class="lang-ja">
 
-<div class="nav-hint">← → ↑ ↓ / hjkl &nbsp;·&nbsp; <kbd>s</kbd> notes &nbsp;·&nbsp; <kbd>f</kbd> fullscreen &nbsp;·&nbsp; <kbd>esc</kbd> overview</div>
+<div class="nav-hint">← → ↑ ↓ &nbsp;·&nbsp; <kbd>l</kbd> lang &nbsp;·&nbsp; <kbd>s</kbd> notes &nbsp;·&nbsp; <kbd>f</kbd> fullscreen &nbsp;·&nbsp; <kbd>esc</kbd> overview</div>
+<div class="lang-badge"></div>
 
 <div class="reveal"><div class="slides">
 
 <!-- =================== 1. TITLE =================== -->
 <section class="center title">
-  <h1>Presentation Title<br>Goes Here</h1>
-  <p style="margin-top:1em;"><b>Author Name</b><br>
-  <span class="small" style="color: var(--muted);">Venue / Course · Year</span></p>
-  <p style="margin-top:2em;" class="small" style="color: var(--muted);">Presenter Name</p>
-  <p class="tiny" style="margin-top:2.5em;">Navigate: arrow keys or <kbd>h j k l</kbd> · press <kbd>s</kbd> to open speaker notes</p>
+  <div class="lang-ja">
+    <h1>プレゼンテーション・タイトル<br>サブタイトル</h1>
+    <p style="margin-top:1em;"><b>著者名</b><br>
+    <span class="small" style="color: var(--muted);">会場 / コース名 ・ 年</span></p>
+    <p style="margin-top:2em;" class="small" style="color: var(--muted);">発表者名</p>
+    <p class="tiny" style="margin-top:2.5em;">移動: 矢印キー · <kbd>l</kbd> で日英切替 · <kbd>s</kbd> でスピーカーノート</p>
+  </div>
+  <div class="lang-en">
+    <h1>Presentation Title<br>Goes Here</h1>
+    <p style="margin-top:1em;"><b>Author Name</b><br>
+    <span class="small" style="color: var(--muted);">Venue / Course · Year</span></p>
+    <p style="margin-top:2em;" class="small" style="color: var(--muted);">Presenter Name</p>
+    <p class="tiny" style="margin-top:2.5em;">Navigate: arrow keys · <kbd>l</kbd> toggles JA/EN · <kbd>s</kbd> opens speaker notes</p>
+  </div>
 
   <aside class="notes">
-  Speaker notes for the title slide. Press <kbd>s</kbd> to open a separate notes window
-  showing the current and next slide alongside these notes.
+  <div class="lang-ja">
+  タイトルスライドのスピーカーノート。<kbd>s</kbd> でノート用ウィンドウが開く。
+  </div>
+  <div class="lang-en">
+  Speaker notes for the title slide. Press <kbd>s</kbd> to open the notes window.
+  </div>
   </aside>
 </section>
 
 <!-- =================== 2. BASIC SLIDE: lists + takeaway + insight =================== -->
 <section>
-  <div class="progress-step">1 / 4 · Section name</div>
-  <h2>A slide with the main components</h2>
+  <div class="lang-ja">
+    <div class="progress-step">1 / 4 · セクション名</div>
+    <h2>主要コンポーネントを並べたスライド</h2>
 
-  <p>Body text uses the default size. Use <code>.small</code> or <code>.tiny</code> for secondary content.</p>
+    <p>本文はデフォルトサイズで表示する。補足には <code>.small</code> や <code>.tiny</code> を使う。</p>
 
-  <ul>
-    <li>Bullet one — accent color via <code>style="color: var(--accent2)"</code></li>
-    <li>Bullet two — <b>bold</b> renders in the foreground color</li>
-    <li>Bullet three — math inline like \(p(h \mid X)\) via KaTeX</li>
-  </ul>
+    <ul>
+      <li>箇条書き 1 — <code>style="color: var(--accent2)"</code> でアクセント色</li>
+      <li>箇条書き 2 — <b>太字</b> は前景色で描画される</li>
+      <li>箇条書き 3 — インライン数式 \(p(h \mid X)\) は KaTeX で描画</li>
+    </ul>
 
-  <div class="takeaway"><b>Takeaway box</b> — warm-toned, for the main message you want the audience to walk away with.</div>
+    <div class="takeaway"><b>持ち帰りボックス</b> — 暖色系。聴衆に持ち帰ってほしい主張に使う。</div>
 
-  <div class="insight"><b>Insight box</b> — cool-toned, for a subtler observation or "key mechanism" callout.</div>
+    <div class="insight"><b>気づきボックス</b> — 寒色系。補足の観察や「鍵となる仕組み」に使う。</div>
+  </div>
+  <div class="lang-en">
+    <div class="progress-step">1 / 4 · Section name</div>
+    <h2>A slide with the main components</h2>
+
+    <p>Body text uses the default size. Use <code>.small</code> or <code>.tiny</code> for secondary content.</p>
+
+    <ul>
+      <li>Bullet one — accent color via <code>style="color: var(--accent2)"</code></li>
+      <li>Bullet two — <b>bold</b> renders in the foreground color</li>
+      <li>Bullet three — math inline like \(p(h \mid X)\) via KaTeX</li>
+    </ul>
+
+    <div class="takeaway"><b>Takeaway box</b> — warm-toned, for the main message you want the audience to walk away with.</div>
+
+    <div class="insight"><b>Insight box</b> — cool-toned, for a subtler observation or "key mechanism" callout.</div>
+  </div>
 
   <aside class="notes">
-  Notes are written inside <code>&lt;aside class="notes"&gt;</code>. They show up in
+  <div class="lang-ja">
+  ノートは <code>&lt;aside class="notes"&gt;</code> 内に書く。ノート・ウィンドウのみに表示され、本スライドには出ない。
+  </div>
+  <div class="lang-en">
+  Notes are written inside <code>&lt;aside class="notes"&gt;</code>. They appear in
   the speaker-notes window but not on the main slide.
+  </div>
   </aside>
 </section>
 
 <!-- =================== 3. TWO-COLUMN LAYOUT =================== -->
 <section>
-  <h2>Two-column layout</h2>
+  <div class="lang-ja">
+    <h2>2 カラムレイアウト</h2>
 
-  <div class="twocol">
-    <div>
-      <h3>Left column</h3>
-      <p class="small">Use <code>.twocol</code> to split content into two equal columns. Good for compare-and-contrast.</p>
-      <ul class="small">
-        <li>Point A</li>
-        <li>Point B</li>
-      </ul>
+    <div class="twocol">
+      <div>
+        <h3>左カラム</h3>
+        <p class="small"><code>.twocol</code> で 2 等分する。比較や対比に向く。</p>
+        <ul class="small">
+          <li>ポイント A</li>
+          <li>ポイント B</li>
+        </ul>
+      </div>
+      <div>
+        <h3>右カラム</h3>
+        <p class="small"><code>.twocol</code> の各子要素が 1 カラムになる。中身は独立に折り返す。</p>
+        <ul class="small">
+          <li>反対意見 A</li>
+          <li>反対意見 B</li>
+        </ul>
+      </div>
     </div>
-    <div>
-      <h3>Right column</h3>
-      <p class="small">Each child of <code>.twocol</code> becomes a column. Columns wrap independently.</p>
-      <ul class="small">
-        <li>Counterpoint A</li>
-        <li>Counterpoint B</li>
-      </ul>
+  </div>
+  <div class="lang-en">
+    <h2>Two-column layout</h2>
+
+    <div class="twocol">
+      <div>
+        <h3>Left column</h3>
+        <p class="small">Use <code>.twocol</code> to split content into two equal columns. Good for compare-and-contrast.</p>
+        <ul class="small">
+          <li>Point A</li>
+          <li>Point B</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Right column</h3>
+        <p class="small">Each child of <code>.twocol</code> becomes a column. Columns wrap independently.</p>
+        <ul class="small">
+          <li>Counterpoint A</li>
+          <li>Counterpoint B</li>
+        </ul>
+      </div>
     </div>
   </div>
 
   <aside class="notes">
+  <div class="lang-ja">
+  「before / after」「モデル / データ」など、二項の対比に向くレイアウト。
+  </div>
+  <div class="lang-en">
   Two-column slides are great for "before vs after," "model vs data," or any binary contrast.
+  </div>
   </aside>
 </section>
 
 <!-- =================== 4. EQUATION + TABLE =================== -->
 <section>
-  <h2>Equations and tables <span class="label">KEY</span></h2>
+  <div class="lang-ja">
+    <h2>数式と表 <span class="label">KEY</span></h2>
 
-  <p class="small">Display math goes in <code>.eq-block</code>:</p>
+    <p class="small">ディスプレイ数式は <code>.eq-block</code> に入れる:</p>
 
-  <div class="eq-block" style="font-size: 1.15em;">
-    \[ p(h \mid X) \;\propto\; \underbrace{p(X \mid h)}_{\text{likelihood}}\; \underbrace{p(h)}_{\text{prior}} \]
+    <div class="eq-block" style="font-size: 1.15em;">
+      \[ p(h \mid X) \;\propto\; \underbrace{p(X \mid h)}_{\text{尤度}}\; \underbrace{p(h)}_{\text{事前}} \]
+    </div>
+
+    <p class="small">比較表は <code>table.compare</code>:</p>
+
+    <table class="compare">
+      <tr><th>条件</th><th>効果</th></tr>
+      <tr><td>例 1 件</td><td>4×  &nbsp; <span style="color:var(--muted);">弱い</span></td></tr>
+      <tr><td>例 3 件</td><td>65×  &nbsp; <span style="color:var(--accent);">決定的</span></td></tr>
+    </table>
+  </div>
+  <div class="lang-en">
+    <h2>Equations and tables <span class="label">KEY</span></h2>
+
+    <p class="small">Display math goes in <code>.eq-block</code>:</p>
+
+    <div class="eq-block" style="font-size: 1.15em;">
+      \[ p(h \mid X) \;\propto\; \underbrace{p(X \mid h)}_{\text{likelihood}}\; \underbrace{p(h)}_{\text{prior}} \]
+    </div>
+
+    <p class="small">Comparison tables use <code>table.compare</code>:</p>
+
+    <table class="compare">
+      <tr><th>Condition</th><th>Effect</th></tr>
+      <tr><td>One example</td><td>4×  &nbsp; <span style="color:var(--muted);">mild</span></td></tr>
+      <tr><td>Three examples</td><td>65×  &nbsp; <span style="color:var(--accent);">decisive</span></td></tr>
+    </table>
   </div>
 
-  <p class="small">Comparison tables use <code>table.compare</code>:</p>
-
-  <table class="compare">
-    <tr><th>Condition</th><th>Effect</th></tr>
-    <tr><td>One example</td><td>4×  &nbsp; <span style="color:var(--muted);">mild</span></td></tr>
-    <tr><td>Three examples</td><td>65×  &nbsp; <span style="color:var(--accent);">decisive</span></td></tr>
-  </table>
-
   <aside class="notes">
+  <div class="lang-ja">
+  KaTeX はインライン \(...\) とディスプレイ \[...\] の両方を描画する。<code>.label</code> ピル (<span class="label">KEY</span>) は中核スライドの目印に。
+  </div>
+  <div class="lang-en">
   KaTeX renders both inline \(...\) and display \[...\] math. The <code>.label</code>
   pill (<span class="label">KEY</span>) is for tagging the central slides of the talk.
+  </div>
   </aside>
 </section>
 
 <!-- =================== 5. FIGURE =================== -->
 <section>
-  <h2>Figures with the white card</h2>
-  <h3>Drop your figure into <code>figs/</code> and reference it from <code>.fig-card</code></h3>
+  <div class="lang-ja">
+    <h2>白カードで図を見せる</h2>
+    <h3>図は <code>figs/</code> に置き、<code>.fig-card</code> で参照する</h3>
 
-  <div class="fig-row">
-    <div class="fig-card" style="max-width: 60%;">
-      <img src="figs/sample.svg" alt="Sample figure placeholder">
-      <div class="fig-caption">Replace figs/sample.svg with your figure. The white card frames dark figures cleanly.</div>
+    <div class="fig-row">
+      <div class="fig-card" style="max-width: 60%;">
+        <img src="figs/sample.svg" alt="サンプル図のプレースホルダ">
+        <div class="fig-caption">figs/sample.svg を差し替える。白カードがダーク背景の図を綺麗に縁取る。</div>
+      </div>
     </div>
+
+    <div class="takeaway">Tip: PNG / SVG どちらも可。論文からの引用図はキャプションに出典を明記する。</div>
+  </div>
+  <div class="lang-en">
+    <h2>Figures with the white card</h2>
+    <h3>Drop your figure into <code>figs/</code> and reference it from <code>.fig-card</code></h3>
+
+    <div class="fig-row">
+      <div class="fig-card" style="max-width: 60%;">
+        <img src="figs/sample.svg" alt="Sample figure placeholder">
+        <div class="fig-caption">Replace figs/sample.svg with your figure. The white card frames dark figures cleanly.</div>
+      </div>
+    </div>
+
+    <div class="takeaway">Tip: PNG/SVG both work. For research figures pulled from papers, cite them in the caption.</div>
   </div>
 
-  <div class="takeaway">Tip: PNG/SVG both work. For research figures pulled from papers, cite them in the caption.</div>
-
   <aside class="notes">
+  <div class="lang-ja">
+  白カードで縁取るとダークテーマでも図が映える。キャプションも収めるため最大高さは 500–600 px 程度に。
+  </div>
+  <div class="lang-en">
   The white-card framing makes figures pop against the dark theme. Keep the
   max-height around 500-600px so captions still fit.
+  </div>
   </aside>
 </section>
 
@@ -178,6 +293,19 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <script>
+  function setLanguage(lang) {
+    const body = document.body;
+    body.classList.remove('lang-ja', 'lang-en');
+    body.classList.add(lang === 'en' ? 'lang-en' : 'lang-ja');
+    document.documentElement.lang = lang === 'en' ? 'en' : 'ja';
+  }
+  function toggleLanguage() {
+    setLanguage(document.body.classList.contains('lang-en') ? 'ja' : 'en');
+  }
+
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  if (urlLang === 'en' || urlLang === 'ja') setLanguage(urlLang);
+
   Reveal.initialize({
     width: 1280,
     height: 960,
@@ -192,10 +320,7 @@
     progress: true,
     plugins: [ RevealNotes ],
     keyboard: {
-      72: 'left',   // h
-      74: 'down',   // j
-      75: 'up',     // k
-      76: 'right'   // l
+      76: toggleLanguage   // l: toggle JA/EN
     }
   });
   function renderMath() {

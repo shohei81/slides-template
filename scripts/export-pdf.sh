@@ -4,6 +4,7 @@ set -euo pipefail
 
 PORT="${PORT:-8765}"
 OUT="${1:-slides.pdf}"
+LANG_ARG="${2:-ja}"
 
 npx -y serve@14 -l "$PORT" . >/dev/null 2>&1 &
 SERVER_PID=$!
@@ -17,7 +18,7 @@ done
 
 npx -y decktape@3 reveal \
   --size 1280x960 \
-  "http://localhost:$PORT/slides.html" \
+  "http://localhost:$PORT/slides.html?lang=$LANG_ARG" \
   "$OUT"
 
 echo "Wrote $OUT"

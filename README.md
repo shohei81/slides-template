@@ -1,70 +1,148 @@
 # slides-template
 
-Reveal.js ベースのプレゼンテーション・テンプレート。単一HTMLで動作し、ダークテーマ・KaTeX 数式・スピーカーノート・hjkl ナビゲーション・PDF エクスポートを備える。
+A reveal.js presentation template. Runs from a single HTML file, with a dark theme, KaTeX math, speaker notes, PDF export, and **per-slide bilingual (JA / EN) content** togglable at runtime.
 
-## クイックスタート
+> 日本語版の README は [README.ja.md](README.ja.md) を参照。
 
-このリポジトリを "Use this template" で複製、もしくは clone してから:
+## Quick start
+
+Use this template via "Use this template," or clone it, then:
 
 ```bash
-npm run dev    # http://localhost:8000/slides.html を開く
+npm run dev    # open http://localhost:8000/slides.html
 ```
 
-スライドは `slides.html` を直接編集する。図は `figs/` に置き、`<img src="figs/foo.png">` で参照する。
+Edit `slides.html` directly. Drop figures into `figs/` and reference them as `<img src="figs/foo.png">`.
 
-## キーボード
+## Setup
 
-| キー | 動作 |
+### Prerequisites
+
+- **Node.js 18+** (for `npx`; Node 20 LTS recommended)
+- For PDF export: a Chromium-compatible browser. `decktape` bundles its own via Puppeteer on first run, so you usually don't need to install anything extra.
+
+No `npm install` step — this repo has zero project dependencies. `serve` (dev server) and `decktape` (PDF) are fetched on demand by `npx -y`.
+
+### Installing Node.js
+
+**macOS (Homebrew):**
+```bash
+brew install node
+```
+
+**Linux (Debian / Ubuntu):**
+```bash
+sudo apt install nodejs npm
+```
+
+**Cross-platform via nvm** (recommended for managing multiple Node versions):
+```bash
+# https://github.com/nvm-sh/nvm — install nvm first, then:
+nvm install 20
+nvm use 20
+```
+
+**Windows:** download the installer from <https://nodejs.org/>, or use [nvm-windows](https://github.com/coreybutler/nvm-windows).
+
+### Verify
+
+```bash
+node --version   # v18.x or later
+npx --version
+```
+
+### First-time scratch run
+
+```bash
+git clone <this-repo>
+cd slides-template
+npm run dev        # serves at http://localhost:8000/slides.html
+# in another terminal:
+npm run pdf        # writes slides.pdf
+```
+
+The first `npm run pdf` is slow — `npx` downloads `decktape` and Puppeteer's Chromium (~150 MB) and caches them. Subsequent runs reuse the cache.
+
+## Keyboard
+
+| Key | Action |
 |---|---|
-| `←` `→` `↑` `↓` / `h` `j` `k` `l` | スライド移動 |
-| `s` | スピーカーノート・ウィンドウを開く |
-| `f` | フルスクリーン |
-| `esc` | 全スライド一覧 |
+| `←` `→` `↑` `↓` | Move between slides |
+| `l` | Toggle JA / EN |
+| `s` | Open speaker-notes window |
+| `f` | Fullscreen |
+| `esc` | Slide overview |
 
-## 用意されているコンポーネント
+## Bilingual slides
 
-`slides.html` のサンプルスライドが、テンプレートで使えるブロックを全て一通り示している。
+Each slide carries both a Japanese and an English version side by side in the markup. The current language is controlled by a class on `<body>` (`lang-ja` or `lang-en`); CSS hides the inactive one. Press `l` to flip.
 
-- `.title` セクション — タイトルスライド
-- `.progress-step` — セクション見出しの上に置く小さなステップ表示
-- `.takeaway` — 暖色のハイライト枠 (主張用)
-- `.insight` — 寒色のハイライト枠 (補足・気づき用)
-- `.twocol` — 2 カラムレイアウト
-- `.eq-block` — 中央寄せの数式ブロック (KaTeX)
-- `table.compare` — 比較用テーブル
-- `.ex-grid` — 4 列のミニカードグリッド
-- `.fig-card` — 白カードで囲った画像 (ダーク背景に図を載せる用)
-- `.label` — `<span class="label">KEY</span>` のような小さなピル型ラベル
-- `<aside class="notes">` — スピーカーノート
+Authoring pattern:
 
-カラー変数は `:root` で定義しているので、`--accent` / `--accent2` を書き換えれば全体の配色を変えられる。
+```html
+<section>
+  <div class="lang-ja">
+    <h2>日本語タイトル</h2>
+    <p>本文</p>
+  </div>
+  <div class="lang-en">
+    <h2>English title</h2>
+    <p>Body text</p>
+  </div>
 
-## PDF エクスポート
-
-```bash
-npm run pdf    # slides.pdf を出力
-# 別ファイル名にしたい場合
-bash scripts/export-pdf.sh out.pdf
+  <aside class="notes">
+    <div class="lang-ja">日本語ノート</div>
+    <div class="lang-en">English notes</div>
+  </aside>
+</section>
 ```
 
-裏で `npx serve` を一時的に立ち上げて `decktape` で印刷する。Node.js と Chromium 系ブラウザの実行環境が必要 (decktape が自動取得)。
+The initial language is JA (`<body class="lang-ja">`). To preset the language via URL (useful for PDF export or sharing a link), append `?lang=en` or `?lang=ja`. A small `JA` / `EN` badge in the bottom-left corner shows the current state.
 
-ブラウザ側で出したい場合は、URL の末尾に `?print-pdf` を付けてブラウザの印刷ダイアログから "PDF として保存" する手もある (Chrome 推奨)。
+## Components
 
-## ディレクトリ構成
+The sample slides in `slides.html` exercise every block the template offers:
+
+- `.title` section — title slide
+- `.progress-step` — small step indicator above the section heading
+- `.takeaway` — warm-toned highlight box (main message)
+- `.insight` — cool-toned highlight box (supplementary observation)
+- `.twocol` — two-column layout
+- `.eq-block` — centered KaTeX math block
+- `table.compare` — comparison table
+- `.ex-grid` — 4-column mini-card grid
+- `.fig-card` — figure framed by a white card (for dark-background figures)
+- `.label` — small pill label, e.g. `<span class="label">KEY</span>`
+- `<aside class="notes">` — speaker notes
+
+Color variables live under `:root` — overwrite `--accent` / `--accent2` to recolor the whole deck.
+
+## PDF export
+
+```bash
+npm run pdf                          # writes slides.pdf in JA
+bash scripts/export-pdf.sh out.pdf   # custom filename
+bash scripts/export-pdf.sh slides-en.pdf en   # English version
+```
+
+Internally spins up `npx serve` and runs `decktape` against `slides.html?lang=<ja|en>`. Requires Node.js and a Chromium-compatible browser runtime (decktape pulls it in).
+
+If you prefer the browser route, append `?print-pdf` to the URL and use the browser's "Save as PDF" dialog (Chrome recommended). Combine with `?lang=en&print-pdf` for an English print.
+
+## Layout
 
 ```
 slides-template/
-├── slides.html              # 本体。直接編集する
-├── figs/                    # 図を置く
+├── slides.html              # The deck. Edit this directly.
+├── figs/                    # Figures
 │   └── sample.svg
 ├── scripts/
 │   └── export-pdf.sh
-├── package.json             # dev / pdf スクリプト
+├── package.json             # dev / pdf scripts
 └── README.md
 ```
 
-## 依存
+## Dependencies
 
-- ランタイム依存ゼロ。`slides.html` 内から CDN で reveal.js@5.1.0 と KaTeX@0.16.11 を読み込んでいる。
-- スクリプト実行には Node.js (npx 経由で `serve` と `decktape` を取得)。
+- No runtime dependencies. `slides.html` loads reveal.js@5.1.0 and KaTeX@0.16.11 from a CDN.
+- The scripts need Node.js (`serve` and `decktape` are fetched via `npx`).
