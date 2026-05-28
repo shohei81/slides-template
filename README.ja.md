@@ -131,13 +131,13 @@ bash scripts/export-pdf.sh slides-en.pdf en   # 英語版を出力
 
 ## デザインテンプレート
 
-`templates/` 配下に差し替え用のデザイン違い (dark / light / academic / minimal) を用意している。気に入ったものを `slides.html` に上書きコピーして使う:
+`templates/` 配下に差し替え用のデザイン違い (dark / light / academic / minimal / terminal / pastel) を用意している。気に入ったものを `slides.html` に上書きコピーして使う:
 
 ```bash
 cp templates/academic.html slides.html
 ```
 
-各テーマのプレビューと説明は [templates/README.md](templates/README.md) を参照。
+各テーマのプレビューと説明は [templates/README.md](templates/README.md) を参照。サンプルスライドの DOM (コンポーネントの追加・再構成・サンプル文言の差し替え等) を更新した場合は `bash scripts/sync-templates.sh` で `templates/dark.html` の本文を他の全テンプレートと `slides.html` に伝搬できる。
 
 ## ディレクトリ構成
 
@@ -150,12 +150,15 @@ slides-template/
 │   ├── light.html
 │   ├── academic.html
 │   ├── minimal.html
+│   ├── terminal.html
+│   ├── pastel.html
 │   └── screenshots/
 ├── figs/                    # 図を置く
 │   └── sample.svg
 ├── scripts/
 │   ├── export-pdf.sh
-│   └── screenshot.sh        # テンプレートのプレビューを再生成
+│   ├── screenshot.sh        # テンプレートのプレビューを再生成
+│   └── sync-templates.sh    # templates/dark.html の本文を全テンプレに伝搬
 ├── package.json             # dev / pdf スクリプト
 ├── README.md                # 英語版
 └── README.ja.md             # 日本語版 (このファイル)

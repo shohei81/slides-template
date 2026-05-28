@@ -36,6 +36,18 @@ Cream background, Crimson Pro / Georgia serif, italic h2 with a thin burgundy ru
 
 Pure white, monochrome, no boxes or rounded corners. Lists use em-dash markers instead of bullets, callout boxes degrade to thin left rules, and the `.label` pill becomes an outlined tag. Maximum focus on words.
 
+### terminal — monospace shell aesthetic
+
+![terminal theme preview](screenshots/terminal.png)
+
+Deep black background, bright green primary and cyan secondary, monospace throughout. h2 picks up a leading `$`, h3 a `#`, lists a `>`, and the language badge becomes `[EN]` / `[JA]`. Built for dev-talk and tooling decks; expect to lean on `code` and `kbd` a lot.
+
+### pastel — friendly workshop theme
+
+![pastel theme preview](screenshots/pastel.png)
+
+Warm cream background with pink and lavender accents, generous border radii, and heart-shaped bullet markers. h2 becomes a rounded pink pill, callout boxes get soft cream / lavender fills. Suits workshops, LTs, internal show-and-tells, and anything that should not feel corporate.
+
 ## Regenerating the previews
 
 ```bash
@@ -50,6 +62,27 @@ Uses macOS Google Chrome in headless mode. Customize via env vars:
 | `SLIDE_INDEX` | `1` | 0=title, 1=components, 2=twocol, 3=eq+table, 4=figure. |
 | `LANG_PARAM` | `en` | `en` or `ja`. |
 | `PORT` | `8765` | Local server port. |
+
+## Keeping templates in sync
+
+Because each template is a self-contained HTML file, edits to the sample slide DOM (new components, restructured layouts, updated copy) have to land in every variant. The repo treats `templates/dark.html` as the canonical body source and provides a sync script:
+
+```bash
+# Edit templates/dark.html, then:
+bash scripts/sync-templates.sh
+```
+
+The script replaces the `<body>...</html>` section of every other `templates/*.html` and `slides.html` with the body from `templates/dark.html`, preserving each target's own `<style>` block and theme link. Override the source via env var if you'd rather drive sync from another template:
+
+```bash
+SOURCE=templates/light.html bash scripts/sync-templates.sh
+```
+
+After syncing, regenerate previews to keep the screenshots fresh:
+
+```bash
+bash scripts/screenshot.sh
+```
 
 ## Customizing further
 

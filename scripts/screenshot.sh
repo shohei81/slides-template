@@ -27,7 +27,8 @@ for _ in {1..30}; do
   sleep 0.2
 done
 
-for tmpl in dark light academic minimal; do
+for tmpl_file in templates/*.html; do
+  tmpl=$(basename "$tmpl_file" .html)
   # Drop .html so serve's cleanUrls redirect doesn't strip the query string.
   url="http://localhost:$PORT/templates/$tmpl?lang=$LANG_PARAM#/$SLIDE_INDEX"
   out="$OUT_DIR/$tmpl.png"

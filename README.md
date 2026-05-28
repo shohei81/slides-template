@@ -131,13 +131,13 @@ If you prefer the browser route, append `?print-pdf` to the URL and use the brow
 
 ## Design templates
 
-`templates/` holds drop-in design alternatives (dark / light / academic / minimal). Pick one and copy it over `slides.html`:
+`templates/` holds drop-in design alternatives (dark / light / academic / minimal / terminal / pastel). Pick one and copy it over `slides.html`:
 
 ```bash
 cp templates/academic.html slides.html
 ```
 
-See [templates/README.md](templates/README.md) for previews and details on each look.
+See [templates/README.md](templates/README.md) for previews and details on each look. When editing sample slide content shared across all templates, run `bash scripts/sync-templates.sh` to propagate the body from `templates/dark.html` to every other template and to `slides.html`.
 
 ## Layout
 
@@ -150,12 +150,15 @@ slides-template/
 │   ├── light.html
 │   ├── academic.html
 │   ├── minimal.html
+│   ├── terminal.html
+│   ├── pastel.html
 │   └── screenshots/
 ├── figs/                    # Figures
 │   └── sample.svg
 ├── scripts/
 │   ├── export-pdf.sh
-│   └── screenshot.sh        # Regenerates template previews
+│   ├── screenshot.sh        # Regenerates template previews
+│   └── sync-templates.sh    # Propagates body from templates/dark.html
 ├── package.json             # dev / pdf scripts
 ├── README.md
 └── README.ja.md
