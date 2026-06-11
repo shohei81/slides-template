@@ -5,6 +5,7 @@
   "description": "Reveal.js presentation template with KaTeX, dark theme, and speaker notes.",
   "scripts": {
     "dev": "npx -y serve@14 -l 8000 .",
-    "pdf": "bash scripts/export-pdf.sh"
+    "pdf": "node scripts/export-pdf.mjs",
+    "pdf:en": "node scripts/export-pdf.mjs slides.html en"
   }
 }

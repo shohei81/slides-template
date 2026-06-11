@@ -19,9 +19,9 @@ Edit `slides.html` directly. Drop figures into `figs/` and reference them as `<i
 ### Prerequisites
 
 - **Node.js 18+** (for `npx`; Node 20 LTS recommended)
-- For PDF export: a Chromium-compatible browser. `decktape` bundles its own via Puppeteer on first run, so you usually don't need to install anything extra.
+- For PDF export: a locally installed Chrome/Chromium (e.g. Google Chrome). The exporter drives whatever browser you already have — nothing is downloaded.
 
-No `npm install` step — this repo has zero project dependencies. `serve` (dev server) and `decktape` (PDF) are fetched on demand by `npx -y`.
+No `npm install` step — this repo has zero project dependencies. `serve` (dev server) is fetched on demand by `npx -y`; PDF export needs only Node.js and your local Chrome.
 
 ### Installing Node.js
 
@@ -57,11 +57,10 @@ npx --version
 git clone <this-repo>
 cd slides-template
 npm run dev        # serves at http://localhost:8000/slides.html
-# in another terminal:
-npm run pdf        # writes slides.pdf
+npm run pdf        # writes slides.pdf (uses your local Chrome, no download)
 ```
 
-The first `npm run pdf` is slow — `npx` downloads `decktape` and Puppeteer's Chromium (~150 MB) and caches them. Subsequent runs reuse the cache.
+PDF export needs no dev server and downloads nothing — it opens `slides.html` in your local Chrome via the DevTools Protocol and prints once reveal.js's print layout and fonts are ready. The first network access fetches the reveal.js/KaTeX CDN assets the deck already uses.
 
 ## Keyboard
 
@@ -120,18 +119,23 @@ Color variables live under `:root` — overwrite `--accent` / `--accent2` to rec
 ## PDF export
 
 ```bash
-npm run pdf                          # writes slides.pdf in JA
-bash scripts/export-pdf.sh out.pdf   # custom filename
-bash scripts/export-pdf.sh slides-en.pdf en   # English version
+npm run pdf                                       # writes slides.pdf (JA)
+npm run pdf:en                                    # writes slides-en.pdf (EN)
+node scripts/export-pdf.mjs slides.html ja out.pdf   # input, lang, output
+node scripts/export-pdf.mjs templates/terminal.html en talk.pdf   # any template
 ```
 
-Internally spins up `npx serve` and runs `decktape` against `slides.html?lang=<ja|en>`. Requires Node.js and a Chromium-compatible browser runtime (decktape pulls it in).
+`scripts/export-pdf.mjs` opens the deck (`file://…?print-pdf&lang=<ja|en>`) in your local Chrome over the DevTools Protocol, **waits until reveal.js's print layout and fonts are actually ready**, then prints to PDF with `preferCSSPageSize` so each slide becomes exactly one page. This avoids the classic blank-page problem of a one-shot `chrome --print-to-pdf`.
 
-If you prefer the browser route, append `?print-pdf` to the URL and use the browser's "Save as PDF" dialog (Chrome recommended). Combine with `?lang=en&print-pdf` for an English print.
+- **Zero dependencies / no downloads.** Node 18+ ships a global `fetch` and `WebSocket`, so the script needs nothing from npm — and it reuses the Chrome you already have instead of fetching a ~150 MB browser.
+- **Pick the browser** with the `CHROME` env var; otherwise it auto-detects Google Chrome / Canary / Chromium / Edge on macOS and Linux.
+- Network access to the reveal.js / KaTeX CDN is still required (the deck loads them at runtime).
+
+If you prefer doing it by hand, append `?print-pdf` to the URL and use Chrome's "Save as PDF" dialog. Combine with `?lang=en&print-pdf` for an English print.
 
 ## Design templates
 
-`templates/` holds drop-in design alternatives (dark / light / academic / minimal / terminal / pastel). Pick one and copy it over `slides.html`:
+`templates/` holds drop-in design alternatives (dark / light / academic / minimal / terminal). Pick one and copy it over `slides.html`:
 
 ```bash
 cp templates/academic.html slides.html
@@ -151,12 +155,11 @@ slides-template/
 │   ├── academic.html
 │   ├── minimal.html
 │   ├── terminal.html
-│   ├── pastel.html
 │   └── screenshots/
 ├── figs/                    # Figures
 │   └── sample.svg
 ├── scripts/
-│   ├── export-pdf.sh
+│   ├── export-pdf.mjs       # PDF export via local Chrome (CDP)
 │   ├── screenshot.sh        # Regenerates template previews
 │   └── sync-templates.sh    # Propagates body from templates/dark.html
 ├── package.json             # dev / pdf scripts
@@ -167,4 +170,4 @@ slides-template/
 ## Dependencies
 
 - No runtime dependencies. `slides.html` loads reveal.js@5.1.0 and KaTeX@0.16.11 from a CDN.
-- The scripts need Node.js (`serve` and `decktape` are fetched via `npx`).
+- The scripts need Node.js 18+. The dev server (`serve`) is fetched via `npx`; PDF export uses your local Chrome and no npm packages.

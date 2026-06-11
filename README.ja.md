@@ -19,9 +19,9 @@ npm run dev    # http://localhost:8000/slides.html を開く
 ### 前提
 
 - **Node.js 18 以降** (`npx` のため。Node 20 LTS 推奨)
-- PDF エクスポート用に Chromium 系ブラウザ。`decktape` が Puppeteer 経由で自前のものを初回に取得するので、別途インストールは通常不要。
+- PDF エクスポート用にローカルの Chrome/Chromium (例: Google Chrome)。エクスポータは既存のブラウザをそのまま使い、ダウンロードは一切しない。
 
-`npm install` は不要 — このリポジトリはプロジェクト依存ゼロ。`serve` (開発サーバ) と `decktape` (PDF) は `npx -y` で都度取得する。
+`npm install` は不要 — このリポジトリはプロジェクト依存ゼロ。`serve` (開発サーバ) は `npx -y` で都度取得する。PDF エクスポートに必要なのは Node.js とローカルの Chrome だけ。
 
 ### Node.js のインストール
 
@@ -57,11 +57,10 @@ npx --version
 git clone <this-repo>
 cd slides-template
 npm run dev        # http://localhost:8000/slides.html で配信
-# 別ターミナルで:
-npm run pdf        # slides.pdf を出力
+npm run pdf        # slides.pdf を出力 (ローカル Chrome を使用、ダウンロードなし)
 ```
 
-初回の `npm run pdf` は遅い — `npx` が `decktape` と Puppeteer 用の Chromium (約 150 MB) を取得してキャッシュするため。2 回目以降はキャッシュを使う。
+PDF エクスポートに開発サーバは不要で、何もダウンロードしない — ローカルの Chrome を DevTools Protocol で操作し、reveal.js の印刷レイアウトとフォントの準備が整ってから印刷する。ネットワークアクセスは、スライドが元々読み込む reveal.js / KaTeX の CDN 取得にのみ必要。
 
 ## キーボード
 
@@ -120,24 +119,47 @@ npm run pdf        # slides.pdf を出力
 ## PDF エクスポート
 
 ```bash
-npm run pdf                                   # slides.pdf を JA で出力
-bash scripts/export-pdf.sh out.pdf            # ファイル名を変更
-bash scripts/export-pdf.sh slides-en.pdf en   # 英語版を出力
+npm run pdf                                          # slides.pdf を出力 (JA)
+npm run pdf:en                                       # slides-en.pdf を出力 (EN)
+node scripts/export-pdf.mjs slides.html ja out.pdf   # 入力・言語・出力を指定
+node scripts/export-pdf.mjs templates/terminal.html en talk.pdf   # 任意のテンプレート
 ```
 
-内部で `npx serve` を一時的に立ち上げ、`decktape` で `slides.html?lang=<ja|en>` を印刷する。Node.js と Chromium 系ブラウザの実行環境が必要 (decktape が自動取得)。
+`scripts/export-pdf.mjs` はデッキ (`file://…?print-pdf&lang=<ja|en>`) をローカルの Chrome で DevTools Protocol 経由で開き、**reveal.js の印刷レイアウトとフォントの準備が整うまで待ってから** `preferCSSPageSize` で印刷する。これにより 1 スライド = 1 ページが保証され、一発勝負の `chrome --print-to-pdf` で起きがちな「空ページ」問題を回避する。
 
-ブラウザ側で出したい場合は、URL の末尾に `?print-pdf` を付けてブラウザの印刷ダイアログから "PDF として保存" する手もある (Chrome 推奨)。英語版を出すなら `?lang=en&print-pdf` の組み合わせで。
+- **依存ゼロ・ダウンロードなし。** Node 18+ はグローバルな `fetch` と `WebSocket` を備えるため npm パッケージは不要。約 150 MB のブラウザを取得せず、既存の Chrome を再利用する。
+- **ブラウザの指定**は `CHROME` 環境変数で。未指定なら macOS / Linux 上の Google Chrome / Canary / Chromium / Edge を自動検出する。
+- reveal.js / KaTeX の CDN へのネットワークアクセスは引き続き必要 (デッキが実行時に読み込むため)。
+
+手動で出したい場合は、URL の末尾に `?print-pdf` を付けて Chrome の "PDF として保存" ダイアログから出す手もある。英語版を出すなら `?lang=en&print-pdf` の組み合わせで。
 
 ## デザインテンプレート
 
-`templates/` 配下に差し替え用のデザイン違い (dark / light / academic / minimal / terminal / pastel) を用意している。気に入ったものを `slides.html` に上書きコピーして使う:
+`templates/` 配下に差し替え用のデザイン違い (dark / light / academic / minimal / terminal) を用意している。気に入ったものを `slides.html` に上書きコピーして使う:
 
 ```bash
 cp templates/academic.html slides.html
 ```
 
 各テーマのプレビューと説明は [templates/README.md](templates/README.md) を参照。サンプルスライドの DOM (コンポーネントの追加・再構成・サンプル文言の差し替え等) を更新した場合は `bash scripts/sync-templates.sh` で `templates/dark.html` の本文を他の全テンプレートと `slides.html` に伝搬できる。
+
+## 他リポジトリで使う (`new-deck`)
+
+`bin/new-deck` を PATH に通しておくと、任意のディレクトリから一発で新しいデッキを生やせる。
+
+```bash
+ln -s "$(pwd)/bin/new-deck" ~/.local/bin/new-deck   # 初回だけ
+```
+
+使い方:
+
+```bash
+cd ../other-repo
+new-deck docs/slides/2026-05-talk    # デフォルト (slides.html + figs/ + templates/*.html + scripts/export-pdf.mjs + package.json, 約108K)
+new-deck --minimal presentations/lt  # 最小 (slides.html + figs/ のみ, 約20K)
+```
+
+スクリーンショット (`templates/screenshots/`) と `templates/README.md` はコピー対象外。デザイン切り替えは `cp templates/light.html slides.html` で。
 
 ## ディレクトリ構成
 
@@ -151,12 +173,11 @@ slides-template/
 │   ├── academic.html
 │   ├── minimal.html
 │   ├── terminal.html
-│   ├── pastel.html
 │   └── screenshots/
 ├── figs/                    # 図を置く
 │   └── sample.svg
 ├── scripts/
-│   ├── export-pdf.sh
+│   ├── export-pdf.mjs       # ローカル Chrome (CDP) で PDF 出力
 │   ├── screenshot.sh        # テンプレートのプレビューを再生成
 │   └── sync-templates.sh    # templates/dark.html の本文を全テンプレに伝搬
 ├── package.json             # dev / pdf スクリプト
@@ -167,4 +188,4 @@ slides-template/
 ## 依存
 
 - ランタイム依存ゼロ。`slides.html` 内から CDN で reveal.js@5.1.0 と KaTeX@0.16.11 を読み込んでいる。
-- スクリプト実行には Node.js (npx 経由で `serve` と `decktape` を取得)。
+- スクリプト実行には Node.js 18+。開発サーバ (`serve`) は npx 経由で取得。PDF 出力はローカルの Chrome を使い、npm パッケージは不要。

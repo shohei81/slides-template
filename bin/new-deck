@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: new-deck [--minimal] <target-dir>
+
+Scaffold a reveal.js slide deck into <target-dir>.
+
+  default     slides.html + figs/ + templates/*.html + scripts/export-pdf.mjs + package.json
+  --minimal   slides.html + figs/ only
+
+Examples:
+  new-deck docs/slides/2026-05-talk
+  new-deck --minimal presentations/lt
+EOF
+}
+
+minimal=0
+target=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help) usage; exit 0 ;;
+    --minimal) minimal=1; shift ;;
+    -*) echo "unknown option: $1" >&2; usage >&2; exit 2 ;;
+    *)
+      if [[ -n "$target" ]]; then
+        echo "too many positional args" >&2; usage >&2; exit 2
+      fi
+      target="$1"; shift ;;
+  esac
+done
+
+if [[ -z "$target" ]]; then
+  usage >&2; exit 2
+fi
+
+# Resolve template root: bin/new-deck → repo root
+src_bin="${BASH_SOURCE[0]}"
+while [[ -L "$src_bin" ]]; do
+  src_bin="$(readlink "$src_bin")"
+done
+root="$(cd "$(dirname "$src_bin")/.." && pwd)"
+
+if [[ ! -f "$root/slides.html" ]]; then
+  echo "could not locate template root (no slides.html at $root)" >&2
+  exit 1
+fi
+
+if [[ -e "$target" && -n "$(ls -A "$target" 2>/dev/null || true)" ]]; then
+  echo "target exists and is not empty: $target" >&2
+  exit 1
+fi
+
+mkdir -p "$target"
+cp "$root/slides.html" "$target/"
+cp -R "$root/figs" "$target/"
+
+if [[ "$minimal" -eq 0 ]]; then
+  mkdir -p "$target/scripts" "$target/templates"
+  cp "$root/scripts/export-pdf.mjs" "$target/scripts/"
+  # Copy template .html files only — skip screenshots and README.
+  for f in "$root"/templates/*.html; do
+    cp "$f" "$target/templates/"
+  done
+  cp "$root/package.json" "$target/"
+fi
+
+echo "scaffolded deck at: $target"
+echo
+echo "next:"
+echo "  cd $target"
+if [[ "$minimal" -eq 0 ]]; then
+  echo "  npm run dev          # serve at http://localhost:8000/slides.html"
+  echo "  npm run pdf          # export slides.pdf"
+else
+  echo "  python3 -m http.server 8000   # then open http://localhost:8000/slides.html"
+fi
