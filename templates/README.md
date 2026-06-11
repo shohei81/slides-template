@@ -42,12 +42,6 @@ Pure white, monochrome, no boxes or rounded corners. Lists use em-dash markers i
 
 Deep black background, bright green primary and cyan secondary, monospace throughout. h2 picks up a leading `$`, h3 a `#`, lists a `>`, and the language badge becomes `[EN]` / `[JA]`. Built for dev-talk and tooling decks; expect to lean on `code` and `kbd` a lot.
 
-### pastel — friendly workshop theme
-
-![pastel theme preview](screenshots/pastel.png)
-
-Warm cream background with pink and lavender accents, generous border radii, and heart-shaped bullet markers. h2 becomes a rounded pink pill, callout boxes get soft cream / lavender fills. Suits workshops, LTs, internal show-and-tells, and anything that should not feel corporate.
-
 ## Regenerating the previews
 
 ```bash
